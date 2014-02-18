@@ -19,8 +19,7 @@ public class FrequentItemSetTwoDriver {
     public static void main(String[] args) throws Exception {
 
     	Configuration conf = new Configuration();
- 
-    	//create a job with configuration
+
         Job job = new Job(conf, "FrequentItemSet2");
         
         //get the job class
