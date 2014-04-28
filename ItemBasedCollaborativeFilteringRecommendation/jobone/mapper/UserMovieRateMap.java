@@ -15,19 +15,19 @@ public class UserMovieRateMap extends Mapper<LongWritable, Text, Text, Text> {
 	
 	public void map(LongWritable key, Text value, Context context)	throws IOException, InterruptedException { 
 
-		String line = value.toString();
+		String line = value.toString().trim();
 		StringTokenizer tokenizer = new StringTokenizer(line);
 
 		while (tokenizer.hasMoreTokens()) {
 
-			String strUserID = tokenizer.nextToken();
-			String strMovieID = tokenizer.nextToken();
-			String strMovieRate = tokenizer.nextToken();
+			String strUserID = tokenizer.nextToken().trim();
+			String strMovieID = tokenizer.nextToken().trim();
+			String strMovieRate = tokenizer.nextToken().trim();
 			
 			userID_key.set(strUserID);
 			movie_rate_value.set(strMovieID+"_"+strMovieRate);
 			
-			System.out.println("Key: " + userID_key + " Value: " +	movie_rate_value.toString());
+			//System.out.println("Key: " + userID_key + " Value: " +	movie_rate_value.toString());
 
 			context.write(userID_key, movie_rate_value);
 		}

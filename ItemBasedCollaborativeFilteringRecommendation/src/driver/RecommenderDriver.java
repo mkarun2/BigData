@@ -10,6 +10,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
+import reducer.SimilarityReducer;
 import reducer.UserMovieRateListReduce;
 
 
@@ -41,7 +42,7 @@ public class RecommenderDriver {
 		Job job2 = new Job(conf2, "ItemBasedCollaborativeFilteringRecommenderJob2");
 		job2.setJarByClass(RecommenderDriver.class);
         job2.setMapperClass(MoviePairRatesValueMap.class);
-        //job2.setReducerClass(UserMovieRateListReduce.class);
+        job2.setReducerClass(SimilarityReducer.class);
         job2.setOutputKeyClass(Text.class);
         job2.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(job2, new Path("output1"));

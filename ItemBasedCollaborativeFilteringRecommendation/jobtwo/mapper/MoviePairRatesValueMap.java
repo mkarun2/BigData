@@ -19,7 +19,7 @@ public class MoviePairRatesValueMap extends Mapper<LongWritable, Text, Text, Tex
 	
 	public void map(LongWritable key, Text value, Context context)	throws IOException, InterruptedException { 
 		Map<String,List<MovieRate>> userMovieRateListHM = new HashMap<String,List<MovieRate>>();
-		Set<String> moviePairs = new TreeSet<String>();
+		List<String> moviePairs = new ArrayList<String>();
 		
 		String line = value.toString();
 		StringTokenizer tokenizer = new StringTokenizer(line);
@@ -33,7 +33,7 @@ public class MoviePairRatesValueMap extends Mapper<LongWritable, Text, Text, Tex
 		}	
 	}
 	
-	private void writeToContext(Set<String> moviePairs,Context context) throws IOException, InterruptedException{
+	private void writeToContext(List<String> moviePairs,Context context) throws IOException, InterruptedException{
 		for(String str : moviePairs){
 			String tmp[] = str.split(" ");
 			if(tmp != null && tmp.length >= 2)
@@ -41,28 +41,28 @@ public class MoviePairRatesValueMap extends Mapper<LongWritable, Text, Text, Tex
 		}
 	}
 	
-	private void createContextPairs(Map<String,List<MovieRate>> userMovieRateListHM, Set<String> moviePairs){
+	private void createContextPairs(Map<String,List<MovieRate>> userMovieRateListHM, List<String> moviePairs){
 		for(Map.Entry<String,List<MovieRate>> e:  userMovieRateListHM.entrySet()){
 			List<MovieRate> tmpList = e.getValue();
 			if(tmpList != null){
 				int j = 0;
-				StringBuilder sb1 = new StringBuilder();	
-				StringBuilder sb2 = new StringBuilder();
 				for(int i = 0; i < tmpList.size() - 1; i++){
 					j = i + 1;
 					while(j < tmpList.size()){
+						StringBuilder sb1 = new StringBuilder();	
+						StringBuilder sb2 = new StringBuilder();
 						sb1.append("(");
 						sb1.append(tmpList.get(i).getMovie_name()+","+tmpList.get(j).getMovie_name());
 						sb1.append(")");
 						sb2.append("(");
 						sb2.append(tmpList.get(i).getRateValue()+","+tmpList.get(j).getRateValue());
 						sb2.append(")");
+						String pair = sb1.toString() +" "+sb2.toString();
+					//	if(!moviePairs.contains(pair))
+						moviePairs.add(pair);
 						j++;
 					}	
 				}
-				String pair = sb1.toString() +" "+sb2.toString();
-				if(!moviePairs.contains(pair))
-					moviePairs.add(pair);
 			}
 		}
 	}

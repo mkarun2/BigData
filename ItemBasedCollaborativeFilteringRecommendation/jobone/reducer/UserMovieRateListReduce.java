@@ -25,8 +25,8 @@ public class UserMovieRateListReduce extends Reducer<Text, Text, Text, Text> {
 	
 	public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 		String	movieRateListString = formatMovieRateListPerUser(key, values);
-		System.out.println("Reducer Key: " + key);
-		System.out.println("Reducer Values: " + movieRateListString);
+		//System.out.println("Reducer Key: " + key);
+		//System.out.println("Reducer Values: " + movieRateListString);
 		user_id.set(key);
 		movie_rate_list.set(movieRateListString);
 		context.write(user_id,movie_rate_list);
