@@ -1,6 +1,8 @@
 package reducer;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.apache.hadoop.io.Text;
@@ -12,9 +14,12 @@ public class SimilarityReducer extends Reducer<Text, Text, Text, Text>{
 	@SuppressWarnings("unused")
 	public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 		System.out.println("Key: " + key.toString());
+		List<String> tmplist = new ArrayList<String>();
 		int count = 0;
 		for(Text txt : values){
+			String s = txt.toString();
 			count++;
+			tmplist.add(s);
 		}
 		
 		if (count >= 2) {
@@ -22,8 +27,7 @@ public class SimilarityReducer extends Reducer<Text, Text, Text, Text>{
 			double[] v2 = new double[count];
 			double dbSimilarity = 0.0;
 			int i = 0;
-			for (Text txt : values) {
-				String str = txt.toString();
+			for (String str : tmplist) {
 				str = str.replaceAll("[()]", "").trim();
 				//System.out.println("Values: " + str);
 				String vectorsStr[] = str.split(",");
@@ -34,8 +38,9 @@ public class SimilarityReducer extends Reducer<Text, Text, Text, Text>{
 				}
 			}
 			dbSimilarity = p.correlation(v1,v2);
-			if(!Double.isNaN(dbSimilarity))
-				context.write(key, new Text(String.valueOf(dbSimilarity)));
+			//dbSimilarity = CosineSimilarity.cosineSimilarity(v1,v2);
+		if(!Double.isNaN(dbSimilarity))
+			context.write(key, new Text(String.valueOf(dbSimilarity)));
 		}
 	}
 
