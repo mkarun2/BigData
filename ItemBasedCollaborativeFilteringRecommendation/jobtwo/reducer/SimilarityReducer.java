@@ -13,7 +13,6 @@ public class SimilarityReducer extends Reducer<Text, Text, Text, Text>{
 	
 	@SuppressWarnings("unused")
 	public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-		System.out.println("Key: " + key.toString());
 		List<String> tmplist = new ArrayList<String>();
 		int count = 0;
 		for(Text txt : values){
