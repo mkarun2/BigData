@@ -8,6 +8,12 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 
+/*
+ * This mapper takes the input data set 
+ * and generates a key with user_id and
+ * value as a concatenated string of
+ * movie_id and movie_rate
+ */
 public class UserMovieRateMap extends Mapper<LongWritable, Text, Text, Text> {
 
 	private final static Text userID_key = new Text();
@@ -27,8 +33,6 @@ public class UserMovieRateMap extends Mapper<LongWritable, Text, Text, Text> {
 			userID_key.set(strUserID);
 			movie_rate_value.set(strMovieID+"_"+strMovieRate);
 			
-			//System.out.println("Key: " + userID_key + " Value: " +	movie_rate_value.toString());
-
 			context.write(userID_key, movie_rate_value);
 		}
 	}

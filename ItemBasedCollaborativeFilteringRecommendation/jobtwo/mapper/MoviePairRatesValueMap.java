@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.TreeSet;
 
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -15,6 +13,11 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 import types.MovieRate;
 
+/*
+ * This mapper is used to generate the movie pairs and its corresponding
+ * rate value pairs.
+ * MovieRate is a pojo object to store the movie instance details
+ */
 public class MoviePairRatesValueMap extends Mapper<LongWritable, Text, Text, Text> {
 	
 	public void map(LongWritable key, Text value, Context context)	throws IOException, InterruptedException { 
@@ -27,8 +30,11 @@ public class MoviePairRatesValueMap extends Mapper<LongWritable, Text, Text, Tex
 		List<MovieRate> tempList = new ArrayList<MovieRate>();
 
 		while (tokenizer.hasMoreTokens()) {			
+			// create movie objects from the output from job1
 			createMovieObjects(tokenizer,userMovieRateListHM,tempList);
+			// create the output pairs
 			createContextPairs(userMovieRateListHM,moviePairs);
+			// write to the context
 			writeToContext(moviePairs,context);			
 		}	
 	}
@@ -58,7 +64,6 @@ public class MoviePairRatesValueMap extends Mapper<LongWritable, Text, Text, Tex
 						sb2.append(tmpList.get(i).getRateValue()+","+tmpList.get(j).getRateValue());
 						sb2.append(")");
 						String pair = sb1.toString() +" "+sb2.toString();
-					//	if(!moviePairs.contains(pair))
 						moviePairs.add(pair);
 						j++;
 					}	
